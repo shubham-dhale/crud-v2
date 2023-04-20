@@ -1,73 +1,100 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import Students from "./Students";
 
+function Edit(props) {
+//   const id = props.student.id;
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [std, setStd] = useState("");
+  const [rollNo, setRollNo] = useState("");
 
-function Edit() {
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-    const [id, setId] = useState('');
-    const [std, setStd] = useState('');
-    const [rollNo,setRollNo] = useState('');
+//   const [open, setOpen] = useState(false);
+//   const [close, setClose] = useState(false);
 
-    let history = useNavigate();
+  let history = useNavigate();
 
-    var index = Students.map(function (e) {
-        
-        return e.id;
-    }).indexOf(id);
+  const updatedStudent = { id, name, rollNo, std, age };
 
-    const handleSubmit = (e) => {
-       
-        e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    props.handleEditMethod(id, updatedStudent);
 
-        let a = Students[index];
-        a.name = name;
-        a.age = age;
-        a.std = std;
-        a.rollNo = rollNo;
+    history("/");
+  };
 
-        history("/");
+
+  useEffect(() => {
+    console.log(props.student)
+    if (props.student) {
+      const {id, name, age, std, rollNo } = props.student;
+      setId(id);
+      setName(name);
+      setAge(age);
+      setStd(std);
+      setRollNo(rollNo);
+
     }
+  }, [props.student]);
 
-    useEffect(() => {
-        
-        setName(localStorage.getItem('name'))
-        setRollNo(localStorage.getItem('rollNo'))
-        setStd(localStorage.getItem('std'))
-        setAge(localStorage.getItem('age'))
-        setId(localStorage.getItem('id'))
-    } )
+  return (
+    <div>
+      <Form className="d-grid">
+        <Form.Group className="mb-3 formInput ">
+          <Form.Control
+            className="my-1"
+            type="text"
+            id="name"
+            value={name === null ? "" : name}
+            placeholder="Enter Name"
 
- return (
+            onChange={(e) => setName(e.target.value)}
+          ></Form.Control>
+          <Form.Control
+            className="my-1"
+            type="text"
+            id="age"
+            value={age === null ? "" : age}
+            placeholder="Enter Age"
 
-        <div>
-            <Form className='d-grid gap-2' style={{ margin: "15rem" }}>
-                <Form.Group className='mb-3' controlId='formName'>
-                    <Form.Control type="text" placeholder="Enter Name"   value={name} required onChange={(e) => setName(e.target.value)}>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3' controlId='formAge'>
-                    <Form.Control type="text" placeholder="Enter Age" value={age}required onChange={(e) => setAge(e.target.value)}>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3' controlId='formStd'>
-                    <Form.Control type="text" placeholder="Enter Std" value={std} required onChange={(e) => setStd(e.target.value)}>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3' controlId='formRollNo'>
-                    <Form.Control type="text" placeholder="Enter Roll No" value={rollNo} required onChange={(e) => setRollNo(e.target.value)}>
-                    </Form.Control>
-                </Form.Group>
-               
-                <Button  onClick={(e) => handleSubmit(e)} type="submit">Update</Button>
-            </Form>
+            onChange={(e) => setAge(e.target.value)}
+          ></Form.Control>
+          <Form.Control
+            className="my-1"
+            type="text"
+            id="std"
+            value={std === null ? "" : std}
+            placeholder="Enter Std"
 
+            onChange={(e) => setStd(e.target.value)}
+          ></Form.Control>
+          <Form.Control
+            className="my-1"
+            type="text"
+            id="rollNo"
+            value={rollNo === null ? "" : rollNo}
+            placeholder="Enter RollNo"
+
+            onChange={(e) => setRollNo(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <div className="d-flex justify-content-end">
+          <button
+            onClick={(e) => handleSubmit(e)}
+            className="btn btn-primary btn-sm mx-1 my-1"
+            type="submit"
+            // handleEdit={handleEditMethod}
+          >
+            Update
+          </button>
         </div>
-
-
-    )
+      </Form>
+    </div>
+  );
 }
+
 export default Edit;
